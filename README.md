@@ -288,13 +288,3 @@ Creator-Studio/
 - Firebase entegrasyonu hazır ancak opsiyoneldir — `FIREBASE_SETUP.md` dosyasına bakın
 
 ---
-
-## Lisans
-
-Bu proje özel (private) kullanım içindir.
-
----
-
-## Katkı
-
-Pull request'ler memnuniyetle karşılanır. Büyük değişiklikler için önce bir issue açarak neyi değiştirmek istediğinizi tartışın.
