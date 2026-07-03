@@ -35,9 +35,14 @@ import {
   Pencil,
   Mail,
   MessageCircle,
-  Clock
+  Clock,
+  KeyRound,
+  AlertCircle,
+  ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const APP_NAME = 'Creator Studio';
 
 // --- TRANSLATIONS ---
 const TRANSLATIONS = {
@@ -148,23 +153,37 @@ const TRANSLATIONS = {
     plan_features_basic: ['500 kredi aylık', 'Tüm görsel modelleri', 'HD kalite çıktılar', 'Öncelikli destek', 'Filigransız', 'Ticari lisans'],
     plan_features_pro: ['2000 kredi aylık', 'Tüm görsel & video modelleri', '4K kalite çıktılar', 'Öncelikli destek', 'Filigransız', 'Ticari lisans', 'API erişimi', 'Özel modeller (yakında)'],
     plan_features_unlimited: ['Sınırsız kredi', 'Tüm modeller & özellikler', 'Ultra HD 8K çıktılar', 'Özel destek', 'Filigransız', 'Genişletilmiş ticari lisans', 'API erişimi', 'Özel modeller', 'Yeni özelliklere erken erişim'],
-    faq_what_is_mezo: 'Mezo nedir ve nasıl çalışır?',
-    faq_what_is_mezo_a: 'Mezo, yapay zeka kullanarak görsel ve video içerikleri oluşturmanıza olanak tanıyan profesyonel bir platformdur. Prompt yazarak istediğiniz içeriği üretebilirsiniz.',
+    faq_what_is_mezo: 'Creator Studio nedir ve nasıl çalışır?',
+    faq_what_is_mezo_a: 'Creator Studio, kendi API anahtarlarınızla profesyonel görsel ve video üretmenizi sağlayan çok sağlayıcılı bir yapay zeka stüdyosudur.',
     faq_credits: 'Kredi sistemi nasıl çalışır?',
     faq_credits_a: 'Her içerik üretimi belirli miktarda kredi kullanır. Resimler 10 kredi, videolar 50 kredi başlangıç değeridir. Model ve resim sayısına göre kredi miktarı değişir.',
     faq_models: 'Hangi modelleri kullanabilirim?',
-    faq_models_a: 'Mezo Realism v2.0, Mezo Creative v3.0 (Beta) ve Mezo Fast (Turbo) modellerini kullanabilirsiniz. Her model farklı özelliklere sahiptir.',
+    faq_models_a: 'OpenAI, Google Gemini, Stability AI, Runway, fal.ai ve Replicate üzerinden popüler görsel/video modellerini kullanabilirsiniz. Her model kendi API anahtarınızla çalışır.',
     faq_commercial: 'Üretilen içerikleri ticari amaçla kullanabilir miyim?',
     faq_commercial_a: 'Pro ve Unlimited planlarında ticari lisans dahildir. Free ve Basic planlarda ticari kullanım için ek lisans gerekebilir.',
     faq_more_credits: 'Nasıl daha fazla kredi alabilirim?',
     faq_more_credits_a: 'Fiyatlandırma sayfasından uygun planı seçerek daha fazla kredi alabilirsiniz. Aylık planlar otomatik yenilenir.',
     contact_description: 'Sorularınız için bizimle iletişime geçebilirsiniz:',
-    support_email: 'support@mezo.ai',
+    support_email: 'support@creator.studio',
     help_subtitle: 'Sıkça sorulan sorular ve yardım kaynakları',
     avg_response_time: 'Ortalama Yanıt Süresi',
     response_email: '24 saat içinde',
     response_live: 'Anında',
-    live_support_instant: 'Canlı destek: Anında'
+    live_support_instant: 'Canlı destek: Anında',
+    api_keys: 'API Anahtarları',
+    api_keys_subtitle: 'Anahtarlar sadece bu tarayıcıda saklanır ve üretim sırasında güvenli sunucu fonksiyonuna gönderilir.',
+    save_keys: 'Anahtarları Kaydet',
+    missing_api_key: 'Seçili model için API anahtarı gerekli.',
+    generation_failed: 'Üretim başarısız oldu',
+    negative_prompt: 'Negatif prompt',
+    negative_prompt_placeholder: 'İstemediğiniz detaylar, bozuk anatomi, düşük kalite...',
+    video_duration: 'Video Süresi',
+    seconds_4: '4 sn',
+    seconds_8: '8 sn',
+    seconds_12: '12 sn',
+    provider_ready: 'Sağlayıcı hazır',
+    provider_missing: 'API anahtarı eksik',
+    privacy_note: 'Anahtarlar backend veritabanına yazılmaz; localStorage üzerinde cihazınızda tutulur.'
   },
   en: {
     nav_gallery: 'Gallery',
@@ -273,23 +292,37 @@ const TRANSLATIONS = {
     plan_features_basic: ['500 credits monthly', 'All image models', 'HD quality outputs', 'Priority support', 'Watermark-free', 'Commercial license'],
     plan_features_pro: ['2000 credits monthly', 'All image & video models', '4K quality outputs', 'Priority support', 'Watermark-free', 'Commercial license', 'API access', 'Custom models (coming soon)'],
     plan_features_unlimited: ['Unlimited credits', 'All models & features', 'Ultra HD 8K outputs', 'Dedicated support', 'Watermark-free', 'Extended commercial license', 'API access', 'Custom models', 'Early access to new features'],
-    faq_what_is_mezo: 'What is Mezo and how does it work?',
-    faq_what_is_mezo_a: 'Mezo is a professional platform that allows you to create image and video content using artificial intelligence. You can generate the content you want by writing prompts.',
+    faq_what_is_mezo: 'What is Creator Studio and how does it work?',
+    faq_what_is_mezo_a: 'Creator Studio is a multi-provider AI studio that lets you generate professional images and videos with your own API keys.',
     faq_credits: 'How does the credit system work?',
     faq_credits_a: 'Each content generation uses a certain amount of credits. Images start at 10 credits, videos at 50 credits. Credit amount varies based on model and number of images.',
     faq_models: 'Which models can I use?',
-    faq_models_a: 'You can use Mezo Realism v2.0, Mezo Creative v3.0 (Beta), and Mezo Fast (Turbo) models. Each model has different features.',
+    faq_models_a: 'You can use popular image and video models through OpenAI, Google Gemini, Stability AI, Runway, fal.ai, and Replicate. Each model runs with your own API key.',
     faq_commercial: 'Can I use generated content for commercial purposes?',
     faq_commercial_a: 'Commercial license is included in Pro and Unlimited plans. Additional license may be required for commercial use in Free and Basic plans.',
     faq_more_credits: 'How can I get more credits?',
     faq_more_credits_a: 'You can get more credits by selecting the appropriate plan from the pricing page. Monthly plans automatically renew.',
     contact_description: 'You can contact us for your questions:',
-    support_email: 'support@mezo.ai',
+    support_email: 'support@creator.studio',
     help_subtitle: 'Frequently asked questions and help resources',
     avg_response_time: 'Average Response Time',
     response_email: 'Within 24 hours',
     response_live: 'Instant',
-    live_support_instant: 'Live support: Instant'
+    live_support_instant: 'Live support: Instant',
+    api_keys: 'API Keys',
+    api_keys_subtitle: 'Keys are stored only in this browser and sent to the secure server function during generation.',
+    save_keys: 'Save Keys',
+    missing_api_key: 'An API key is required for the selected model.',
+    generation_failed: 'Generation failed',
+    negative_prompt: 'Negative prompt',
+    negative_prompt_placeholder: 'Unwanted details, bad anatomy, low quality...',
+    video_duration: 'Video Duration',
+    seconds_4: '4 sec',
+    seconds_8: '8 sec',
+    seconds_12: '12 sec',
+    provider_ready: 'Provider ready',
+    provider_missing: 'API key missing',
+    privacy_note: 'Keys are not written to a backend database; they stay on your device in localStorage.'
   }
 };
 
@@ -431,20 +464,50 @@ const generateCommunityWorks = () => {
 
 const COMMUNITY_WORKS_IMAGES = generateCommunityWorks();
 
+const API_PROVIDERS = [
+  { id: 'openai', label: 'OpenAI', placeholder: 'sk-...' },
+  { id: 'gemini', label: 'Google Gemini', placeholder: 'AIza...' },
+  { id: 'stability', label: 'Stability AI', placeholder: 'sk-...' },
+  { id: 'runway', label: 'Runway', placeholder: 'key_...' },
+  { id: 'fal', label: 'fal.ai', placeholder: 'fal_...' },
+  { id: 'replicate', label: 'Replicate', placeholder: 'r8_...' },
+];
+
 // Image Models
 const IMAGE_MODELS = [
-  { id: 'gemini-imagen', label: 'Gemini Imagen 3', provider: 'Google' },
-  { id: 'dalle-3', label: 'DALL-E 3', provider: 'OpenAI' },
-  { id: 'dalle-2', label: 'DALL-E 2', provider: 'OpenAI' },
-  { id: 'gemini-flash', label: 'Gemini Flash', provider: 'Google' },
+  { id: 'openai-gpt-image', label: 'GPT Image 1.5', provider: 'OpenAI', providerKey: 'openai', apiModel: 'gpt-image-1.5' },
+  { id: 'openai-dalle-3', label: 'DALL-E 3', provider: 'OpenAI', providerKey: 'openai', apiModel: 'dall-e-3' },
+  { id: 'gemini-flash-image', label: 'Gemini 2.5 Flash Image', provider: 'Google Gemini', providerKey: 'gemini', apiModel: 'gemini-2.5-flash-image' },
+  { id: 'gemini-nano-banana', label: 'Gemini 3.1 Flash Image', provider: 'Google Gemini', providerKey: 'gemini', apiModel: 'gemini-3.1-flash-image' },
+  { id: 'gemini-nano-banana-pro', label: 'Gemini 3 Pro Image', provider: 'Google Gemini', providerKey: 'gemini', apiModel: 'gemini-3-pro-image-preview' },
+  { id: 'stability-ultra', label: 'Stable Image Ultra', provider: 'Stability AI', providerKey: 'stability', apiModel: 'ultra' },
+  { id: 'stability-core', label: 'Stable Image Core', provider: 'Stability AI', providerKey: 'stability', apiModel: 'core' },
+  { id: 'fal-flux-2', label: 'FLUX 2', provider: 'fal.ai', providerKey: 'fal', apiModel: 'fal-ai/flux-2' },
+  { id: 'fal-flux-2-pro', label: 'FLUX 2 Pro', provider: 'fal.ai', providerKey: 'fal', apiModel: 'fal-ai/flux-2-pro' },
+  { id: 'fal-flux-dev', label: 'FLUX Dev', provider: 'fal.ai', providerKey: 'fal', apiModel: 'fal-ai/flux/dev' },
+  { id: 'replicate-flux-schnell', label: 'FLUX Schnell', provider: 'Replicate', providerKey: 'replicate', apiModel: 'black-forest-labs/flux-schnell' },
+  { id: 'replicate-flux-pro', label: 'FLUX 1.1 Pro', provider: 'Replicate', providerKey: 'replicate', apiModel: 'black-forest-labs/flux-1.1-pro' },
+  { id: 'replicate-sdxl', label: 'Stable Diffusion XL', provider: 'Replicate', providerKey: 'replicate', apiModel: 'stability-ai/sdxl' },
 ];
 
 // Video Models
 const VIDEO_MODELS = [
-  { id: 'gemini-veo', label: 'Gemini Veo', provider: 'Google' },
-  { id: 'sora', label: 'Sora', provider: 'OpenAI' },
-  { id: 'runway-gen3', label: 'Runway Gen-3', provider: 'Runway' },
+  { id: 'openai-sora-2', label: 'Sora 2', provider: 'OpenAI', providerKey: 'openai', apiModel: 'sora-2' },
+  { id: 'openai-sora-2-pro', label: 'Sora 2 Pro', provider: 'OpenAI', providerKey: 'openai', apiModel: 'sora-2-pro' },
+  { id: 'gemini-veo-31', label: 'Veo 3.1', provider: 'Google Gemini', providerKey: 'gemini', apiModel: 'veo-3.1-generate-preview' },
+  { id: 'gemini-veo-31-fast', label: 'Veo 3.1 Fast', provider: 'Google Gemini', providerKey: 'gemini', apiModel: 'veo-3.1-fast-generate-preview' },
+  { id: 'gemini-veo-30', label: 'Veo 3.0', provider: 'Google Gemini', providerKey: 'gemini', apiModel: 'veo-3.0-generate-001' },
+  { id: 'runway-gen45', label: 'Runway Gen-4.5', provider: 'Runway', providerKey: 'runway', apiModel: 'gen4.5' },
+  { id: 'runway-gen4-turbo', label: 'Runway Gen-4 Turbo', provider: 'Runway', providerKey: 'runway', apiModel: 'gen4_turbo' },
+  { id: 'fal-kling', label: 'Kling 1.6', provider: 'fal.ai', providerKey: 'fal', apiModel: 'fal-ai/kling-video/v1.6/standard/text-to-video' },
+  { id: 'fal-minimax', label: 'Minimax Video', provider: 'fal.ai', providerKey: 'fal', apiModel: 'fal-ai/minimax/video-01-live' },
+  { id: 'replicate-kling', label: 'Kling Video', provider: 'Replicate', providerKey: 'replicate', apiModel: 'kwaivgi/kling-v1.6-standard' },
+  { id: 'replicate-minimax', label: 'Minimax Video', provider: 'Replicate', providerKey: 'replicate', apiModel: 'minimax/video-01' },
+  { id: 'replicate-seedance', label: 'Seedance 1 Lite', provider: 'Replicate', providerKey: 'replicate', apiModel: 'bytedance/seedance-1-lite' },
 ];
+
+const ALL_MODELS = [...IMAGE_MODELS, ...VIDEO_MODELS];
+const getModelConfig = (modelId) => ALL_MODELS.find((model) => model.id === modelId);
 
 // --- REUSABLE COMPONENTS ---
 
@@ -666,7 +729,7 @@ const AnimatedPlaceholder = ({ theme, lang, hasGenerated }) => {
 };
 
 // Minimal Dropdown Component
-const Dropdown = ({ label, icon: Icon, value, options, onSelect, theme }) => {
+const Dropdown = ({ label, icon: Icon, value, options, onSelect, theme, wide = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -698,11 +761,12 @@ const Dropdown = ({ label, icon: Icon, value, options, onSelect, theme }) => {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-medium transition-all duration-200 ${buttonClass}`}
+        className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-medium transition-all duration-200 max-w-full ${buttonClass}`}
+        title={selectedLabel}
       >
-        {Icon && <Icon size={14} />}
-        <span>{selectedLabel}</span>
-        <ChevronDown size={12} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        {Icon && <Icon size={14} className="flex-shrink-0" />}
+        <span className={`truncate ${wide ? 'max-w-[11rem] sm:max-w-[14rem]' : 'max-w-[8rem]'}`}>{selectedLabel}</span>
+        <ChevronDown size={12} className={`flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       <AnimatePresence>
@@ -711,21 +775,23 @@ const Dropdown = ({ label, icon: Icon, value, options, onSelect, theme }) => {
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
-            className={`absolute top-full left-0 mt-2 w-48 rounded-xl shadow-xl z-50 overflow-hidden py-1 border ${menuClass}`}
+            className={`absolute top-full left-0 mt-2 rounded-xl shadow-xl z-[120] border overflow-hidden ${wide ? 'w-72 sm:w-80' : 'w-48'} ${menuClass}`}
           >
-            {options.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => {
-                  onSelect(option.id);
-                  setIsOpen(false);
-                }}
-                className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between group ${itemHoverClass}`}
-              >
-                {option.label}
-                {value === option.id && <Check size={12} className={theme === 'dark' ? "text-white" : "text-black"} />}
-              </button>
-            ))}
+            <div className="max-h-60 overflow-y-auto overscroll-contain py-1">
+              {options.map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => {
+                    onSelect(option.id);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between gap-2 group ${itemHoverClass}`}
+                >
+                  <span className="flex-1 min-w-0 leading-snug">{option.label}</span>
+                  {value === option.id && <Check size={12} className={`flex-shrink-0 ${theme === 'dark' ? "text-white" : "text-black"}`} />}
+                </button>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -734,7 +800,7 @@ const Dropdown = ({ label, icon: Icon, value, options, onSelect, theme }) => {
 };
 
 // Image Detail Modal
-const ImageDetailModal = ({ image, onClose, onEdit, theme, t, onCopyPrompt, onCopyLink }) => {
+const ImageDetailModal = ({ image, onClose, onEdit, theme, t, onCopyPrompt, onCopyLink, onDownload }) => {
   if (!image) return null;
   
   const modalBg = theme === 'dark' ? 'bg-[#0f0f0f] border-white/10' : 'bg-white border-gray-200';
@@ -803,7 +869,7 @@ const ImageDetailModal = ({ image, onClose, onEdit, theme, t, onCopyPrompt, onCo
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <p className={`text-xs font-medium mb-1 ${textSecondary}`}>{t.model_used}</p>
-                  <p className={`text-sm ${textMain}`}>{image.model || 'Gemini Imagen 3'}</p>
+                  <p className={`text-sm ${textMain}`}>{image.model || APP_NAME}</p>
                 </div>
                 <div>
                   <p className={`text-xs font-medium mb-1 ${textSecondary}`}>{t.style_used}</p>
@@ -852,13 +918,7 @@ const ImageDetailModal = ({ image, onClose, onEdit, theme, t, onCopyPrompt, onCo
                 <Share2 size={18} />
               </button>
               <button 
-                onClick={() => {
-                  const link = image.url;
-                  const a = document.createElement('a');
-                  a.href = link;
-                  a.download = '';
-                  a.click();
-                }}
+                onClick={() => onDownload(image.assets?.[0] || image.url, `${APP_NAME.toLowerCase().replace(/\s+/g, '-')}-${image.id}`)}
                 className={`p-2.5 rounded-lg transition-colors ${buttonSecondary}`}
                 title={t.download}
               >
@@ -1290,22 +1350,104 @@ const ProfileDropdown = ({ theme, t, credits, onClose }) => {
   );
 };
 
+const ApiSettingsModal = ({ apiKeys, setApiKeys, onClose, theme, t }) => {
+  const modalBg = theme === 'dark' ? 'bg-[#0f0f0f] border-white/10' : 'bg-white border-gray-200';
+  const textMain = theme === 'dark' ? 'text-white' : 'text-gray-900';
+  const textSecondary = theme === 'dark' ? 'text-zinc-400' : 'text-gray-500';
+  const inputBg = theme === 'dark' ? 'bg-black/50 border-white/10 text-white placeholder-zinc-700' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400';
+  const buttonBg = theme === 'dark' ? 'bg-white text-black hover:bg-zinc-200' : 'bg-black text-white hover:bg-gray-800';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm ${theme === 'dark' ? 'bg-black/80' : 'bg-black/20'}`}
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        onClick={(e) => e.stopPropagation()}
+        className={`border w-full max-w-2xl p-5 sm:p-6 rounded-2xl shadow-2xl relative ${modalBg}`}
+      >
+        <button onClick={onClose} className={`absolute top-4 right-4 transition-colors ${theme === 'dark' ? 'text-gray-500 hover:text-white' : 'text-gray-400 hover:text-black'}`}>
+          <X size={20} />
+        </button>
+
+        <div className="mb-6 pr-8">
+          <div className="flex items-center gap-3 mb-3">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${theme === 'dark' ? 'bg-white text-black' : 'bg-black text-white'}`}>
+              <KeyRound size={18} />
+            </div>
+            <div>
+              <h2 className={`text-2xl font-semibold ${textMain}`}>{t.api_keys}</h2>
+              <p className={`text-sm ${textSecondary}`}>{t.api_keys_subtitle}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-4">
+          {API_PROVIDERS.map((provider) => (
+            <label key={provider.id} className="block">
+              <div className="flex items-center justify-between mb-2">
+                <span className={`text-sm font-medium ${textMain}`}>{provider.label}</span>
+                <span className={`text-[11px] flex items-center gap-1 ${apiKeys[provider.id] ? 'text-emerald-500' : textSecondary}`}>
+                  {apiKeys[provider.id] ? <ShieldCheck size={13} /> : <AlertCircle size={13} />}
+                  {apiKeys[provider.id] ? t.provider_ready : t.provider_missing}
+                </span>
+              </div>
+              <input
+                type="password"
+                value={apiKeys[provider.id] || ''}
+                onChange={(e) => setApiKeys((prev) => ({ ...prev, [provider.id]: e.target.value.trim() }))}
+                placeholder={provider.placeholder}
+                className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${inputBg}`}
+                autoComplete="off"
+              />
+            </label>
+          ))}
+        </div>
+
+        <div className={`mt-5 rounded-xl border p-3 text-xs leading-relaxed ${theme === 'dark' ? 'border-white/10 bg-white/5 text-zinc-400' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
+          {t.privacy_note}
+        </div>
+
+        <button onClick={onClose} className={`mt-5 w-full py-3 px-4 rounded-xl text-sm font-semibold transition-colors ${buttonBg}`}>
+          {t.save_keys}
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 // 2. Main Application Component
 export default function App() {
   const [prompt, setPrompt] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [viewState, setViewState] = useState('landing'); // 'landing' | 'results'
   const [theme, setTheme] = useState('dark'); // 'dark' | 'light'
   const [lang, setLang] = useState('tr'); // 'tr' | 'en'
   
   // Settings State
-  const [selectedModel, setSelectedModel] = useState('gemini-imagen');
+  const [selectedModel, setSelectedModel] = useState('openai-gpt-image');
   const [aspectRatio, setAspectRatio] = useState('16:9');
   const [selectedStyle, setSelectedStyle] = useState('none');
   const [contentType, setContentType] = useState('image');
   const [imageCount, setImageCount] = useState('1');
+  const [videoDuration, setVideoDuration] = useState('4');
+  const [negativePrompt, setNegativePrompt] = useState('');
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [uploadedImageData, setUploadedImageData] = useState(null);
+  const [apiKeys, setApiKeys] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('creator-studio-api-keys')) || {};
+    } catch {
+      return {};
+    }
+  });
+  const [showApiSettings, setShowApiSettings] = useState(false);
   
   // Filter State for Discover
   const [filterType, setFilterType] = useState('all');
@@ -1339,10 +1481,15 @@ export default function App() {
   // Profile Dropdown State
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   
-  // Simulation State
+  // Generation State
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState(null);
+  const [generationError, setGenerationError] = useState('');
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem('creator-studio-api-keys', JSON.stringify(apiKeys));
+  }, [apiKeys]);
   
   // Credit calculation function
   const calculateCredits = (contentType, model, imageCount = 1) => {
@@ -1351,14 +1498,22 @@ export default function App() {
     // Model-based credit multipliers
     let modelMultiplier = 1;
     if (contentType === 'image') {
-      if (model === 'dalle-3') modelMultiplier = 1.5;
-      else if (model === 'dalle-2') modelMultiplier = 0.8;
-      else if (model === 'gemini-imagen') modelMultiplier = 1.2;
-      else if (model === 'gemini-flash') modelMultiplier = 0.7;
+      if (model === 'openai-dalle-3') modelMultiplier = 1.4;
+      else if (model === 'openai-gpt-image') modelMultiplier = 1.5;
+      else if (model === 'stability-ultra') modelMultiplier = 1.3;
+      else if (model === 'stability-core') modelMultiplier = 0.8;
+      else if (model === 'replicate-flux-schnell') modelMultiplier = 0.7;
+      else if (model === 'replicate-flux-pro') modelMultiplier = 1.1;
+      else if (model.startsWith('gemini-')) modelMultiplier = 1.1;
+      else if (model.startsWith('fal-')) modelMultiplier = 0.9;
     } else if (contentType === 'video') {
-      if (model === 'sora') modelMultiplier = 2;
-      else if (model === 'gemini-veo') modelMultiplier = 1.5;
-      else if (model === 'runway-gen3') modelMultiplier = 1.8;
+      if (model === 'openai-sora-2-pro') modelMultiplier = 2.4;
+      else if (model === 'openai-sora-2') modelMultiplier = 2;
+      else if (model === 'runway-gen45') modelMultiplier = 2.2;
+      else if (model === 'runway-gen4-turbo') modelMultiplier = 1.7;
+      else if (model.startsWith('gemini-veo')) modelMultiplier = 2.1;
+      else if (model.startsWith('fal-')) modelMultiplier = 1.9;
+      else if (model.startsWith('replicate-')) modelMultiplier = 1.8;
     }
     
     const countMultiplier = parseInt(imageCount) || 1;
@@ -1396,64 +1551,124 @@ export default function App() {
     { id: '8', label: t.count_8 },
   ];
 
-  const handleGenerate = () => {
+  const VIDEO_DURATIONS = [
+    { id: '4', label: t.seconds_4 },
+    { id: '8', label: t.seconds_8 },
+    { id: '12', label: t.seconds_12 },
+  ];
+
+  const pollGeneration = async (job, apiKey) => {
+    let currentJob = job;
+
+    for (let attempt = 0; attempt < 48; attempt += 1) {
+      await new Promise((resolve) => setTimeout(resolve, attempt < 6 ? 5000 : 10000));
+
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'poll',
+          job: currentJob,
+          apiKey,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || t.generation_failed);
+      }
+      if (data.status === 'completed') {
+        return data;
+      }
+      currentJob = data.job || currentJob;
+    }
+
+    throw new Error('Video generation is still processing. Please try again in a moment.');
+  };
+
+  const handleGenerate = async () => {
     if (!prompt.trim()) return;
 
-    if (!isLoggedIn) {
-      setShowAuthModal(true);
+    const modelConfig = getModelConfig(selectedModel);
+    const providerKey = modelConfig?.providerKey;
+    const apiKey = providerKey ? apiKeys[providerKey] : '';
+
+    if (!modelConfig || !apiKey) {
+      setGenerationError(t.missing_api_key);
+      setShowApiSettings(true);
       return;
     }
 
-    // Calculate required credits
     const requiredCredits = calculateCredits(contentType, selectedModel, imageCount);
-    
-    // Check if user has enough credits
-    if (userCredits < requiredCredits) {
-      setShowCreditsModal(true);
-      return;
-    }
-
-    // Check generation count - 3rd generation should show pricing
-    if (generationCount >= 2) {
-      setShowPricingModal(true);
-      return;
-    }
-
-    // Deduct credits
-    setUserCredits(prev => prev - requiredCredits);
-    setGenerationCount(prev => prev + 1);
-
+    const promptText = prompt.trim();
     setViewState('results');
     setIsGenerating(true);
     setGeneratedContent(null);
+    setGenerationError('');
 
-    // Simulate API Call
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'generate',
+          apiKey,
+          contentType,
+          provider: modelConfig.providerKey,
+          model: modelConfig.apiModel,
+          modelLabel: modelConfig.label,
+          prompt: promptText,
+          style: selectedStyle,
+          styleLabel: STYLES.find(s => s.id === selectedStyle)?.label || t.style_none,
+          ratio: aspectRatio,
+          imageCount: contentType === 'image' ? Number(imageCount) : 1,
+          duration: Number(videoDuration),
+          negativePrompt,
+          referenceImage: uploadedImageData,
+        }),
+      });
+
+      let data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || t.generation_failed);
+      }
+      if (data.status === 'processing' && data.job) {
+        data = await pollGeneration(data.job, apiKey);
+      }
+      if (!data.assets?.length || !data.assets[0]?.url) {
+        throw new Error('Provider returned no downloadable asset.');
+      }
+
       setIsGenerating(false);
       const newContent = {
         id: Date.now(),
-        url: "https://images.unsplash.com/photo-1618172193763-c511deb635ca?q=80&w=1000&auto=format&fit=crop",
-        prompt: prompt,
+        url: data.assets?.[0]?.url,
+        assets: data.assets || [],
+        prompt: promptText,
         style: STYLES.find(s => s.id === selectedStyle)?.label || t.style_none,
         styleId: selectedStyle,
         ratio: aspectRatio,
         type: contentType,
-        model: selectedModel,
+        model: modelConfig.label,
+        provider: modelConfig.provider,
         imageCount: imageCount,
         creditsUsed: requiredCredits,
         createdAt: new Date().toISOString()
       };
       setGeneratedContent(newContent);
-      // Add to library
       setMyLibrary(prev => [newContent, ...prev]);
-      
-      // Clear prompt and uploaded image after generation
+      setUserCredits(prev => Math.max(prev - requiredCredits, 0));
+      setGenerationCount(prev => prev + 1);
       setPrompt("");
       setUploadedImage(null);
+      setUploadedImageData(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-    }, 2500);
+    } catch (error) {
+      setIsGenerating(false);
+      setGenerationError(error.message || t.generation_failed);
+    }
   };
 
   const handleLoginSuccess = () => {
@@ -1467,6 +1682,7 @@ export default function App() {
   
   const handleEditImage = (image) => {
     setUploadedImage(image.url);
+    setUploadedImageData(image.url);
     setPrompt(image.prompt);
     
     // Set content type (image or video)
@@ -1506,6 +1722,7 @@ export default function App() {
   
   const handleDeleteUploadedImage = () => {
     setUploadedImage(null);
+    setUploadedImageData(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -1526,10 +1743,26 @@ export default function App() {
     // You could add a toast notification here
   };
 
+  const downloadAsset = (asset, fallbackName = 'creator-studio-output') => {
+    const url = asset?.url || asset;
+    if (!url) return;
+    const extension = asset?.mime?.includes('video') ? 'mp4' : asset?.mime?.split('/')[1]?.split(';')[0] || (url.startsWith('data:video') ? 'mp4' : 'png');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fallbackName}.${extension}`;
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       setUploadedImage(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onload = () => setUploadedImageData(reader.result);
+      reader.readAsDataURL(file);
     }
   };
 
@@ -1572,6 +1805,8 @@ export default function App() {
   
   const cardBg = theme === 'dark' ? 'bg-[#0f0f0f] border-white/10' : 'bg-white border-gray-200';
   const skeletonBg = theme === 'dark' ? 'bg-[#0f0f0f]' : 'bg-gray-100';
+  const activeModelConfig = getModelConfig(selectedModel);
+  const activeProviderHasKey = Boolean(activeModelConfig?.providerKey && apiKeys[activeModelConfig.providerKey]);
 
   return (
     <div className={`min-h-screen font-sans overflow-x-hidden transition-colors duration-300 ${bgMain} ${textMain} selection:bg-purple-500/20`}>
@@ -1588,7 +1823,7 @@ export default function App() {
                 <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.4"/>
               </svg>
             </div>
-            <span className="text-lg sm:text-xl font-bold tracking-tight">{theme === 'dark' ? 'Mezo' : 'Mezo'}</span>
+            <span className="text-lg sm:text-xl font-bold tracking-tight">{APP_NAME}</span>
           </div>
 
           {/* Center - Navigation Links */}
@@ -1656,6 +1891,13 @@ export default function App() {
                 className={`p-2 rounded-lg transition-all ${theme === 'dark' ? 'text-zinc-400 hover:text-white hover:bg-white/10' : 'text-gray-500 hover:text-black hover:bg-black/5'}`}
               >
                 {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
+              <button
+                onClick={() => setShowApiSettings(true)}
+                className={`p-2 rounded-lg transition-all ${theme === 'dark' ? 'text-zinc-400 hover:text-white hover:bg-white/10' : 'text-gray-500 hover:text-black hover:bg-black/5'}`}
+                title={t.api_keys}
+              >
+                <KeyRound size={16} />
               </button>
             </div>
 
@@ -1745,15 +1987,24 @@ export default function App() {
                     >
                       <div className={`relative overflow-hidden rounded-lg border ${theme === 'dark' ? 'bg-zinc-900 border-white/5' : 'bg-gray-100 border-gray-200'}`}>
                         <div className="relative w-full" style={{ aspectRatio: item.ratio === '1:1' ? '1' : item.ratio === '9:16' ? '9/16' : item.ratio === '4:3' ? '4/3' : '16/9' }}>
-                          <img 
-                            src={item.url} 
-                            alt={item.prompt} 
-                            loading="lazy"
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            onError={(e) => {
-                              e.target.src = `https://picsum.photos/seed/${item.id}/800/600`;
-                            }}
-                          />
+                          {item.type === 'video' ? (
+                            <video
+                              src={item.url}
+                              muted
+                              playsInline
+                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                          ) : (
+                            <img 
+                              src={item.url} 
+                              alt={item.prompt} 
+                              loading="lazy"
+                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              onError={(e) => {
+                                e.target.src = `https://picsum.photos/seed/${item.id}/800/600`;
+                              }}
+                            />
+                          )}
                         </div>
                       </div>
                       <div className="mt-2">
@@ -1769,7 +2020,18 @@ export default function App() {
               <div>
                 <h1 className={`text-3xl font-bold mb-8 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{t.settings}</h1>
                 <div className={`p-6 rounded-xl border ${theme === 'dark' ? 'bg-[#0f0f0f] border-white/10' : 'bg-white border-gray-200'}`}>
-                  <p className={theme === 'dark' ? 'text-zinc-400' : 'text-gray-500'}>{t.settings_coming_soon}</p>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                      <h2 className={`text-xl font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{t.api_keys}</h2>
+                      <p className={theme === 'dark' ? 'text-zinc-400' : 'text-gray-500'}>{t.api_keys_subtitle}</p>
+                    </div>
+                    <button
+                      onClick={() => setShowApiSettings(true)}
+                      className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors ${theme === 'dark' ? 'bg-white text-black hover:bg-zinc-200' : 'bg-black text-white hover:bg-gray-800'}`}
+                    >
+                      {t.api_keys}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -1888,7 +2150,7 @@ export default function App() {
                 </div>
 
                 {/* Settings Toolbar (Dropdowns) */}
-                <div className={`flex flex-wrap items-center gap-1.5 sm:gap-2 px-3 sm:px-4 pb-3 sm:pb-4 pt-1 border-t rounded-b-xl sm:rounded-b-2xl backdrop-blur-sm ${settingsBg}`}>
+                <div className={`relative z-20 flex flex-wrap items-center gap-1.5 sm:gap-2 px-3 sm:px-4 pb-3 sm:pb-4 pt-1 border-t rounded-b-xl sm:rounded-b-2xl backdrop-blur-sm ${settingsBg}`}>
                    <Dropdown 
                      label={t.content_type} 
                      icon={contentType === 'image' ? ImageIcon : Video} 
@@ -1900,12 +2162,12 @@ export default function App() {
                          setImageCount('1');
                          // Switch to video model if current model is image-only
                          if (IMAGE_MODELS.find(m => m.id === selectedModel)) {
-                           setSelectedModel('gemini-veo');
+                           setSelectedModel('gemini-veo-31');
                          }
                        } else {
                          // Switch to image model if current model is video-only
                          if (VIDEO_MODELS.find(m => m.id === selectedModel)) {
-                           setSelectedModel('gemini-imagen');
+                           setSelectedModel('gemini-nano-banana');
                          }
                        }
                      }} 
@@ -1923,13 +2185,25 @@ export default function App() {
                      />
                    )}
 
+                   {contentType === 'video' && (
+                     <Dropdown
+                       label={t.video_duration}
+                       icon={Clock}
+                       value={videoDuration}
+                       options={VIDEO_DURATIONS}
+                       onSelect={setVideoDuration}
+                       theme={theme}
+                     />
+                   )}
+
                    <Dropdown 
                      label={t.model} 
                      icon={Settings2} 
                      value={selectedModel} 
+                     wide
                      options={contentType === 'image' 
-                       ? IMAGE_MODELS.map(m => ({ id: m.id, label: m.label }))
-                       : VIDEO_MODELS.map(m => ({ id: m.id, label: m.label }))
+                       ? IMAGE_MODELS.map(m => ({ id: m.id, label: `${m.label} · ${m.provider}` }))
+                       : VIDEO_MODELS.map(m => ({ id: m.id, label: `${m.label} · ${m.provider}` }))
                      } 
                      onSelect={(val) => {
                        setSelectedModel(val);
@@ -1956,9 +2230,34 @@ export default function App() {
                    />
 
                    <div className="flex-1"></div>
+                   {activeModelConfig && (
+                     <button
+                       onClick={() => setShowApiSettings(true)}
+                       className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-medium transition-all ${
+                         activeProviderHasKey
+                           ? theme === 'dark' ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                           : theme === 'dark' ? 'bg-red-500/10 text-red-300 border-red-500/20' : 'bg-red-50 text-red-700 border-red-200'
+                       }`}
+                     >
+                       {activeProviderHasKey ? <ShieldCheck size={14} /> : <KeyRound size={14} />}
+                       {activeModelConfig.provider}
+                     </button>
+                   )}
                    <div className={`text-[10px] font-mono hidden sm:block ${theme === 'dark' ? 'text-zinc-600' : 'text-gray-400'}`}>
                       {prompt.length} / 2000
                    </div>
+                </div>
+                <div className={`px-3 sm:px-4 pb-3 sm:pb-4 ${settingsBg}`}>
+                  <input
+                    value={negativePrompt}
+                    onChange={(e) => setNegativePrompt(e.target.value)}
+                    placeholder={t.negative_prompt_placeholder}
+                    className={`w-full rounded-lg border px-3 py-2 text-xs outline-none transition-colors ${
+                      theme === 'dark'
+                        ? 'bg-black/30 border-white/10 text-zinc-200 placeholder-zinc-700'
+                        : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                    }`}
+                  />
                 </div>
               </div>
             </div>
@@ -1982,11 +2281,32 @@ export default function App() {
                     </h3>
                     {generatedContent && (
                        <div className="flex gap-2">
-                          <button className={`p-1.5 rounded-lg transition-colors ${theme === 'dark' ? 'hover:bg-white/10 text-zinc-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-black'}`}><Share2 size={14} /></button>
-                          <button className={`p-1.5 rounded-lg transition-colors ${theme === 'dark' ? 'hover:bg-white/10 text-zinc-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-black'}`}><Download size={14} /></button>
+                          <button
+                            onClick={() => handleCopyLink(generatedContent.url)}
+                            className={`p-1.5 rounded-lg transition-colors ${theme === 'dark' ? 'hover:bg-white/10 text-zinc-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-black'}`}
+                          >
+                            <Share2 size={14} />
+                          </button>
+                          <button
+                            onClick={() => downloadAsset(generatedContent.assets?.[0] || generatedContent.url, `${APP_NAME.toLowerCase().replace(/\s+/g, '-')}-${generatedContent.id}`)}
+                            className={`p-1.5 rounded-lg transition-colors ${theme === 'dark' ? 'hover:bg-white/10 text-zinc-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-black'}`}
+                          >
+                            <Download size={14} />
+                          </button>
                        </div>
                     )}
                   </div>
+
+                  {generationError && (
+                    <div className={`w-full max-w-2xl mx-auto mb-4 rounded-xl border p-4 text-sm flex items-start gap-3 ${
+                      theme === 'dark'
+                        ? 'bg-red-500/10 border-red-500/20 text-red-200'
+                        : 'bg-red-50 border-red-200 text-red-700'
+                    }`}>
+                      <AlertCircle size={18} className="mt-0.5 flex-shrink-0" />
+                      <span>{generationError}</span>
+                    </div>
+                  )}
 
                   {isGenerating ? (
                      /* Skeleton Loading - Smaller */
@@ -2006,11 +2326,19 @@ export default function App() {
                         className={`relative w-full aspect-video cursor-pointer`}
                         onClick={() => handleImageClick(generatedContent)}
                       >
-                        <img 
-                          src={generatedContent.url} 
-                          alt={generatedContent.prompt} 
-                          className="w-full h-full object-cover"
-                        />
+                        {generatedContent.type === 'video' ? (
+                          <video
+                            src={generatedContent.url}
+                            controls
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <img
+                            src={generatedContent.url}
+                            alt={generatedContent.prompt}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -2052,15 +2380,24 @@ export default function App() {
                       >
                         <div className={`relative overflow-hidden rounded-lg border ${theme === 'dark' ? 'bg-zinc-900 border-white/5' : 'bg-gray-100 border-gray-200'}`}>
                           <div className="relative w-full" style={{ aspectRatio: item.ratio === '1:1' ? '1' : item.ratio === '9:16' ? '9/16' : item.ratio === '4:3' ? '4/3' : '16/9' }}>
-                            <img 
-                              src={item.url} 
-                              alt={item.prompt} 
-                              loading="lazy"
-                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                              onError={(e) => {
-                                e.target.src = `https://picsum.photos/seed/${item.id}/800/600`;
-                              }}
-                            />
+                            {item.type === 'video' ? (
+                              <video
+                                src={item.url}
+                                muted
+                                playsInline
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              />
+                            ) : (
+                              <img 
+                                src={item.url} 
+                                alt={item.prompt} 
+                                loading="lazy"
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                onError={(e) => {
+                                  e.target.src = `https://picsum.photos/seed/${item.id}/800/600`;
+                                }}
+                              />
+                            )}
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -2341,6 +2678,15 @@ export default function App() {
             setMode={setAuthMode}
           />
         )}
+        {showApiSettings && (
+          <ApiSettingsModal
+            apiKeys={apiKeys}
+            setApiKeys={setApiKeys}
+            onClose={() => setShowApiSettings(false)}
+            theme={theme}
+            t={t}
+          />
+        )}
         {showPricingModal && (
           <PricingModal
             onClose={() => setShowPricingModal(false)}
@@ -2371,6 +2717,7 @@ export default function App() {
             t={t}
             onCopyPrompt={handleCopyPrompt}
             onCopyLink={handleCopyLink}
+            onDownload={downloadAsset}
           />
         )}
       </AnimatePresence>
